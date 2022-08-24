@@ -131,7 +131,7 @@ public Action Command_Nuke(int client, int args)
 
 	g_iPreviousNukeLauncher = client;
 	
-	MC_PrintToChatAll("%s{olive}%N {default}has launched %s Team's Nuke at %f, %f, %f!", PLUGIN_PREFIX, client, g_sNukeTeam, g_fNukePosition[0], g_fNukePosition[1], g_fNukePosition[2]);
+	MC_PrintToChatAllEx(client, "%s{teamcolor}%N {default}has launched {teamcolor}%s Team{default}'s Nuke at %f, %f, %f!", PLUGIN_PREFIX, client, g_sNukeTeam, g_fNukePosition[0], g_fNukePosition[1], g_fNukePosition[2]);
 	PrintCenterTextAll("%N has launched %s Team's Nuke at %f, %f, %f!", client, g_sNukeTeam, g_fNukePosition[0], g_fNukePosition[1], g_fNukePosition[2]);
 	PrintToServer("[Nuke] %N has launched a nuke on the server at %f, %f, %f", client, g_fNukePosition[0], g_fNukePosition[1], g_fNukePosition[2]);
 	EmitSoundToAll("weapons/stinger_fire1.wav");
