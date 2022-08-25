@@ -185,7 +185,15 @@ public Action Timer_Nuke(Handle hTimer)
 				EmitSoundToAll("ambient/alarms/siren.wav");
 			}
 
-			PrintCenterTextAll("%s Team's Nuke will land in %d seconds.", g_sNukeTeam, g_iNukeTimer);
+			if (g_iNukeTimer != 1)
+			{
+				PrintCenterTextAll("%s Team's Nuke will land in %d seconds.", g_sNukeTeam, g_iNukeTimer);
+			}
+			else
+			{
+				PrintCenterTextAll("%s Team's Nuke will land in %d second.", g_sNukeTeam, g_iNukeTimer);
+			}
+			
 			TE_SetupBeamRingPoint(g_fNukePosition, 0.0, 2048.0, g_iWhiteSprite, g_iHaloSprite, 0, 10, 1.0, 1.0, 0.5, {188,220,255,255}, 10, 0);
   			TE_SendToAll();
 		}
