@@ -7,6 +7,7 @@
 #include <morecolors>
 
 #pragma newdecls required
+#pragma dynamic 131072
 
 #define PLUGIN_VERSION "0.1.0"
 #define FADE_IN  0x0001
@@ -131,7 +132,7 @@ public Action Command_Nuke(int client, int args)
 
 	g_iPreviousNukeLauncher = client;
 	
-	MC_PrintToChatAllEx(client, "%s{teamcolor}%N {default}has launched {teamcolor}%s Team{default}'s Nuke at %f, %f, %f!", PLUGIN_PREFIX, client, g_sNukeTeam, g_fNukePosition[0], g_fNukePosition[1], g_fNukePosition[2]);
+	CPrintToChatAllEx(client, "%s{teamcolor}%N {default}has launched {teamcolor}%s Team{default}'s Nuke at %f, %f, %f!", PLUGIN_PREFIX, client, g_sNukeTeam, g_fNukePosition[0], g_fNukePosition[1], g_fNukePosition[2]);
 	PrintCenterTextAll("%N has launched %s Team's Nuke at %f, %f, %f!", client, g_sNukeTeam, g_fNukePosition[0], g_fNukePosition[1], g_fNukePosition[2]);
 	PrintToServer("[Nuke] %N has launched a nuke on the server at %f, %f, %f", client, g_fNukePosition[0], g_fNukePosition[1], g_fNukePosition[2]);
 	EmitSoundToAll("weapons/stinger_fire1.wav");
@@ -387,5 +388,5 @@ public Action Timer_KillEntity(Handle hTimer, int entityId)
 
 void RespondToCommand(int client, const char[] message)
 {
-	MC_PrintToChat(client, "%s{default}%s", PLUGIN_PREFIX, message);
+	CPrintToChat(client, "%s{default}%s", PLUGIN_PREFIX, message);
 }
