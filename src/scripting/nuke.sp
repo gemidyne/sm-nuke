@@ -51,7 +51,7 @@ public void OnPluginStart()
 	g_hIsEnabled = CreateConVar("sm_nuke_enabled", "1", "Controls whether nukes can be launched on the server.", 0, true, 0.0, true, 1.0);
 
 	OnVersionChanged(g_hCvarVersion, "", "");
-    g_hCvarVersion.AddChangeHook(OnVersionChanged);
+	g_hCvarVersion.AddChangeHook(OnVersionChanged);
 }
 
 public void OnMapStart()
