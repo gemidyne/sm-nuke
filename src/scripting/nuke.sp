@@ -9,13 +9,16 @@
 #pragma newdecls required
 #pragma dynamic 131072
 
-#define PLUGIN_VERSION "0.1.0"
+#define PLUGIN_VERSION "1.0"
 #define FADE_IN  0x0001
 #define FADE_OUT 0x0002
 
 #define PLUGIN_PREFIX "{green}[ {red}Nuke {green}] "
+#define COOLDOWN_TIME 230
 
-bool g_bIsEnabled = true;
+ConVar g_hPluginVersion;
+ConVar g_hIsEnabled;
+
 bool g_bIsNuking = false;
 
 int g_iNukeTimer;
@@ -26,7 +29,6 @@ char g_sNukeTeam[5];
 
 float g_fNukePosition[3];
 
-// Textures
 int g_iWhiteSprite;
 int g_iHaloSprite;
 int g_iExplosionSprite;
@@ -44,6 +46,12 @@ public void OnPluginStart()
 {
 	HookEvent("round_end", Event_RoundEnd);
 	RegConsoleCmd("sm_nuke", Command_Nuke);
+
+	g_hPluginVersion = CreateConVar("sm_nuke_version", PLUGIN_VERSION, "SM Nuke version", FCVAR_NOTIFY | FCVAR_DONTRECORD);
+	g_hIsEnabled = CreateConVar("sm_nuke_enabled", "1", "Controls whether nukes can be launched on the server.", 0, true, 0.0, true, 1.0);
+
+	OnVersionChanged(g_hCvarVersion, "", "");
+    g_hCvarVersion.AddChangeHook(OnVersionChanged);
 }
 
 public void OnMapStart()
@@ -55,7 +63,7 @@ public void OnMapStart()
 	PrecacheGeneric("dooms_nuke_collumn");
 	PrecacheGeneric("base_destroyed_smoke_doomsday");
 	PrecacheGeneric("flash_doomsday");
-	
+
 	PrecacheSound("ambient/explosions/explode_8.wav", true);
 	PrecacheSound("ambient/machines/aircraft_distant_flyby3.wav", true);
 	PrecacheSound("ambient/explosions/explode_6.wav", true);
@@ -77,6 +85,14 @@ public Action Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast
 	return Plugin_Handled;
 }
 
+public void OnVersionChanged(ConVar convar, char[] oldValue, char[] newValue)
+{
+    if (!StrEqual(newValue, PLUGIN_VERSION))
+    {
+        convar.SetString(PLUGIN_VERSION, false, false);
+    }
+}
+
 public Action Command_Nuke(int client, int args)
 {
 	if (!IsClientConnected(client) && !IsClientInGame(client))
@@ -84,27 +100,27 @@ public Action Command_Nuke(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!g_bIsEnabled)
+	if (!g_hIsEnabled.BoolValue)
 	{
-		RespondToCommand(client, "Nuke is disabled.");
+		RespondToCommand(client, "Nukes cannot be launched at the moment.");
 		return Plugin_Handled;
 	}
 
 	if (g_bIsNuking)
 	{
-		RespondToCommand(client, "A Nuke has already been launched.");
+		RespondToCommand(client, "A nuke has already been launched.");
 		return Plugin_Handled;
 	}
 
 	if (client == g_iPreviousNukeLauncher)
 	{
-		RespondToCommand(client, "You launched a nuke recently and cannot launch another one just now.");
+		RespondToCommand(client, "You have launched a nuke recently and cannot launch another one just now.");
 		return Plugin_Handled;
 	}
 
 	if (!IsPlayerAlive(client))
 	{
-		RespondToCommand(client, "You must be alive to launch a Nuke.");
+		RespondToCommand(client, "You must be alive to launch a nuke.");
 		return Plugin_Handled;
 	}
 
@@ -142,7 +158,7 @@ public Action Command_Nuke(int client, int args)
 
 	g_bIsNuking = true;
 	g_iNukeTimer = 12; 
-	g_iWaitTimer = 230;
+	g_iWaitTimer = COOLDOWN_TIME;
 
 	return Plugin_Handled;
 }
