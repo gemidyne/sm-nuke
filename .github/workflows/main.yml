@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        smver: ["1.10.x", "1.11.x"]
+        smver: ["1.11.x", "1.12.x"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -50,7 +50,6 @@ jobs:
       - name: Create artifact structure
         run: |
           mkdir -p rel/tf/addons/sourcemod/plugins
-          mkdir -p rel/tf/addons/sourcemod/translations
           cp src/scripting/nuke.smx rel/tf/addons/sourcemod/plugins/nuke.smx
         working-directory: ${{ env.SCRIPTS_PATH }}
 
